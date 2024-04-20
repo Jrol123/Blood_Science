@@ -8,7 +8,7 @@ real re = 0.9*rc-0.2e-3; //радиус эритроцита
 real kd = 0; // Коэффициент деформации
 real H = 0.5; //линейная плотность эритроцитов
 
-//? Циклы созданы для вычисления значений
+//? Циклы для вычисления значений
 // for(real H = 0.1; H <= 0.5; H += 0.2)
 // {
 
@@ -25,19 +25,26 @@ real H = 0.5; //линейная плотность эритроцитов
 	real L = ne*(le+lp); //длина капилляра
 	real p0 = (5*L)/3*1000; //давление
 	real d = le*kd; //деформация
+	//* Utility
+	//? Для вычисления скоростей
 	int nx = 60;
 	real xd = rc/nx;
 
-	// Mesh
-	border C1(t = 0, rc)   {x=t;  y=0;  label = 1;}
-	border C2(t = 0, L)    {x=rc;  y=t;  label = 2;}	
-	border C3(t = 0,rc)    {x=rc-t; y=L;  label = 3;}
+	//* Генерация Mesh
+	border C1(t = 0, rc)   {x=t;  y=0;  label = 1;} // Top
+	border C2(t = 0, L)    {x=rc;  y=t;  label = 2;}
+	border C3(t = 0,rc)    {x=rc-t; y=L;  label = 3;} // Bottom
 	border C4(t = 0,L)     {x=0; y=L-t; label = 4;}
 
 	mesh Th = buildmesh (C1(60) + C2(500) + C3(60) + C4(500));
-	// plot (Th);
+	// plot(C1(60), wait=1);
+	// plot(C2(500), wait=1);
+	// plot(C3(60), wait=1);
+	// plot(C4(500), wait=1);
+	// plot(C1(60) + C2(500) + C3(60) + C4(500), wait=1);
+	// plot(Th);
 
-	// Fespace
+	//* Генерация Fespace
 	fespace Xh(Th, P2);
 	Xh u1, v1;
 	Xh u2, v2, u2i;
@@ -50,15 +57,22 @@ real H = 0.5; //линейная плотность эритроцитов
 		if (x<re){
 			for (int n=0; n<ne; n++){
 				//if ((y>=(lp/2+(le+lp)*n))&&(y<=(lp/2+(le+lp)*n+le))) return 0.1;
-				if ((y>=(-d*(x^2/re^2-1)+(le+lp)*n+lp/2))&&(y<=((-d*(x^2/re^2-1)+(le+lp)*n+le+lp/2)))) return 0.1;
+				if ((y>=(-d*(x^2/re^2-1)+(le+lp)*n+lp/2))&&
+					(y<=((-d*(x^2/re^2-1)+(le+lp)*n+le+lp/2))))
+					{
+						//? RBC
+						return 0.1;
+					}
 			}
 		}
+		//? Plasma
 		return 0.001;
 	}
 
 
-	// Problem (with solve)
+	//* Солвер
 	real eps = 1e-8;
+	//? Объединение 2-х решений в одно
 	solve Stokes ([u1, u2, p], [v1, v2, q])
 		= int2d(Th)(
 			( 2*x*mu(x,y)*dx(u1)*dx(v1) + x*mu(x,y)*(dy(u1)+dx(u2))*(dy(v1)+dx(v2))
@@ -73,7 +87,7 @@ real H = 0.5; //линейная плотность эритроцитов
 		+ on (3, p=0)
 		;
 	
-	// Plot
+	//* Графический вывод
 	u2i=u2(3.e-3-x,y);
 	plot(u2i, wait=true,value=true,fill=true); //!Uncomment!
 	for (int i=0; i<=30; i++){//!Unomment!
@@ -81,8 +95,9 @@ real H = 0.5; //линейная плотность эритроцитов
 		cout << i*(1e-4) << endl; //!Unomment!
 	}//!Unomment!
 
+	//* Вычисление скоростей (RBC и плазма)
 	// Integral of velocity, sum1 as in middle rbc, sum2 as in middle plasma
-
+	//? Вычисление скоростей при помощи интегралов
 	real sumRBC = 0;
 	real sumPlasma = 0;
 	for(int i=0; i<nx; i++) {
@@ -90,6 +105,7 @@ real H = 0.5; //линейная плотность эритроцитов
 		sumPlasma = sumPlasma + u2(xd/2+i*xd, le+1.3*lp)*(xd/2+i*xd)* xd;
 	}
 
+	//* Вывод доп. данных
 	//? Часть цикла
 	// MassRBC[index] = sumRBC* 2* pi;
 	// MassPlasma[index] = sumPlasma* 2* pi;
