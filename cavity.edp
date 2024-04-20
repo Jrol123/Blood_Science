@@ -5,7 +5,7 @@ real rc = 3e-3; //радиус капилляра
 real re = 0.9*rc-0.2e-3; //радиус эритроцита  
 //real re = 2.9e-3;
 
-real kd = 0; // Коэффициент деформации
+real kd = 0.4; // Коэффициент деформации
 real H = 0.5; //линейная плотность эритроцитов
 
 //? Циклы для вычисления значений
@@ -44,19 +44,21 @@ real H = 0.5; //линейная плотность эритроцитов
 	// plot(C1(60) + C2(500) + C3(60) + C4(500), wait=1);
 	// plot(Th);
 
-	//* Генерация Fespace
-	fespace Xh(Th, P2);
+	//* Генерация функций и пространств
+	//? Fespace. См. Документацию https://doc.freefem.org/models/navier-stokes-equations.html
+	fespace Xh(Th, P2); // Пространство для скорости
 	Xh u1, v1;
 	Xh u2, v2, u2i;
 	Xh up1, up2;
 	Xh psi, phi;
-	fespace Mh(Th, P1);
+	fespace Mh(Th, P1); // Пространство для давления
 	Mh p, q;
 
+	//? Эффективная вязкость (отличается для эритроцитов и плазмы (см. с.2))
 	func real mu(real x, real y){
 		if (x<re){
 			for (int n=0; n<ne; n++){
-				//if ((y>=(lp/2+(le+lp)*n))&&(y<=(lp/2+(le+lp)*n+le))) return 0.1;
+				//if ((y>=(lp/2+(le+lp)*n))&&(y<=(lp/2+(le+lp)*n+le))) return 0.1; //! Неверно?
 				if ((y>=(-d*(x^2/re^2-1)+(le+lp)*n+lp/2))&&
 					(y<=((-d*(x^2/re^2-1)+(le+lp)*n+le+lp/2))))
 					{
@@ -90,10 +92,10 @@ real H = 0.5; //линейная плотность эритроцитов
 	//* Графический вывод
 	u2i=u2(3.e-3-x,y);
 	plot(u2i, wait=true,value=true,fill=true); //!Uncomment!
-	for (int i=0; i<=30; i++){//!Unomment!
+	for (int i=0; i<=30; i++){//!Unomment?
 	//	cout << u2i ( i*(1e-4), 5*L/12) << endl;
-		cout << i*(1e-4) << endl; //!Unomment!
-	}//!Unomment!
+		cout << i*(1e-4) << endl; //!Unomment?
+	}//!Unomment?
 
 	//* Вычисление скоростей (RBC и плазма)
 	// Integral of velocity, sum1 as in middle rbc, sum2 as in middle plasma
