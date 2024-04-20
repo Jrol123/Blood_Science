@@ -29,6 +29,7 @@ real H = 0.5; //линейная плотность эритроцитов
 	//? Для вычисления скоростей
 	int nx = 60;
 	real xd = rc/nx;
+	cout << rc << "    " << nx << endl << xd << endl << endl;
 
 	//* Генерация Mesh
 	border C1(t = 0, rc)   {x=t;  y=0;  label = 1;} // Top
