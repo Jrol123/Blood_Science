@@ -50,7 +50,7 @@ real H = 0.5; //линейная плотность эритроцитов
 	fespace Xh(Th, P2); // Пространство для скорости
 	Xh u1, v1;
 	Xh u2, v2, u2i;
-	Xh up1, up2;
+	// Xh up1, up2;
 	Xh psi, phi;
 	fespace Mh(Th, P1); // Пространство для давления
 	Mh p, q;
@@ -93,6 +93,7 @@ real H = 0.5; //линейная плотность эритроцитов
 	//* Графический вывод
 	u2i=u2(3.e-3-x,y); //? Отражение по OY ?
 	plot(u2i, wait=true,value=true,fill=true); //!Uncomment!
+	plot(u2, wait=true,value=true,fill=true);
 	for (int i=0; i<=30; i++){//!Unomment?
 	//	cout << u2i ( i*(1e-4), 5*L/12) << endl;
 		cout << i*(1e-4) << endl; //!Unomment?
