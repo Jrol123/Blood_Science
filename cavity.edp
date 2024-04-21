@@ -1,27 +1,27 @@
 // Parameters
-real nu = 1./100.;
-real dt = 0.1;
+// real nu = 1./100.;
+// real dt = 0.1;
 real rc = 3e-3; //радиус капилляра
 real re = 0.9*rc-0.2e-3; //радиус эритроцита  
 //real re = 2.9e-3;
 
-real kd = 0; // Коэффициент деформации
+real kd = 0.5; // Коэффициент деформации
 real H = 0.5; //линейная плотность эритроцитов
 
 //? Циклы для вычисления значений
-// for(real H = 0.1; H <= 0.5; H += 0.2)
-// {
+for(real H = 0.1; H <= 0.5; H += 0.4)
+{
 
-// int index = 0;
-// real[int] MassRBC(6);
-// real[int] MassPlasma(6);
+int index = 0;
+real[int] MassRBC(6);
+real[int] MassPlasma(6);
 
-// 	for (real kd = 0; kd <= 0.5; kd += 0.1)
-// 	{
+	for (real kd = 0; kd <= 0.5; kd += 0.1)
+	{
 
 	real le = 88/pi/re^2*1e-9; //длина эритроцита
 	real lp = le/H-le; //длина промежутка плазмы
-	real ne = 3; //количество эритроцитов
+	real ne = 3; //количество эритроцитов //? Поэксперементировать
 	real L = ne*(le+lp); //длина капилляра
 	real p0 = (5*L)/3*1000; //давление
 	real d = le*kd; //деформация
@@ -59,7 +59,7 @@ real H = 0.5; //линейная плотность эритроцитов
 	func real mu(real x, real y){
 		if (x<re){
 			for (int n=0; n<ne; n++){
-				//if ((y>=(lp/2+(le+lp)*n))&&(y<=(lp/2+(le+lp)*n+le))) return 0.1; //! Неверно?
+				//if ((y>=(lp/2+(le+lp)*n))&&(y<=(lp/2+(le+lp)*n+le))) return 0.1;
 				if ((y>=(-d*(x^2/re^2-1)+(le+lp)*n+lp/2))&&
 					(y<=((-d*(x^2/re^2-1)+(le+lp)*n+le+lp/2))))
 					{
@@ -92,12 +92,12 @@ real H = 0.5; //линейная плотность эритроцитов
 	
 	//* Графический вывод
 	u2i=u2(3.e-3-x,y); //? Отражение по OY ?
-	plot(u2i, wait=true,value=true,fill=true); //!Uncomment!
-	plot(u2, wait=true,value=true,fill=true);
-	for (int i=0; i<=30; i++){//!Unomment?
-	//	cout << u2i ( i*(1e-4), 5*L/12) << endl;
-		cout << i*(1e-4) << endl; //!Unomment?
-	}//!Unomment?
+	// plot(u2i, wait=true,value=true,fill=true);
+	// plot(u2, wait=true,value=true,fill=true);
+	// for (int i=0; i<=30; i++){
+	// //	cout << u2i ( i*(1e-4), 5*L/12) << endl;
+	// 	cout << i*(1e-4) << endl;
+	// }
 
 	//* Вычисление скоростей (RBC и плазма)
 	// Integral of velocity, sum1 as in middle rbc, sum2 as in middle plasma
@@ -111,8 +111,8 @@ real H = 0.5; //линейная плотность эритроцитов
 
 	//* Вывод доп. данных
 	//? Часть цикла
-	// MassRBC[index] = sumRBC* 2* pi;
-	// MassPlasma[index] = sumPlasma* 2* pi;
+	MassRBC[index] = sumRBC* 2* pi;
+	MassPlasma[index] = sumPlasma* 2* pi;
 
 
 	cout << "Blood flow rate = " << sumRBC* 2* pi << "     " << sumPlasma* 2* pi << endl;
@@ -122,10 +122,10 @@ real H = 0.5; //линейная плотность эритроцитов
 
 	// cout <<  sumPlasma* 2* pi << endl;
 	//cout <<  re << endl;
-	// cout << "index = " << index << "     " << "kd = " << kd << "     " << "d = " << d << endl;
-	cout << endl << "kd = " << kd << "\t" << "d = " << d << endl;
+	cout << "index = " << index << "     " << "kd = " << kd << "     " << "d = " << d << endl;
+	// cout << endl << "kd = " << kd << "\t" << "d = " << d << endl;
 //? Часть цикла
-// 	index ++;
-// 	}
-// 	cout << endl << "Density = " << H << endl << MassRBC << endl << MassPlasma << endl << endl;
-// }
+	index ++;
+	}
+	cout << endl << "Density = " << H << endl << MassRBC << endl << MassPlasma << endl << endl;
+}
