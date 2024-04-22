@@ -9,15 +9,15 @@ real kd = 0.5; // Коэффициент деформации
 real H = 0.5; //линейная плотность эритроцитов
 
 //? Циклы для вычисления значений
-for(real H = 0.1; H <= 0.5; H += 0.4)
-{
+// for(real H = 0.1; H <= 0.5; H += 0.1)
+// {
 
-int index = 0;
-real[int] MassRBC(6);
-real[int] MassPlasma(6);
+// int index = 0;
+// real[int] MassRBC(6);
+// real[int] MassPlasma(6);
 
-	for (real kd = 0; kd <= 0.5; kd += 0.1)
-	{
+// 	for (real kd = 0; kd <= 0.5; kd += 0.1)
+// 	{
 
 	real le = 88/pi/re^2*1e-9; //длина эритроцита
 	real lp = le/H-le; //длина промежутка плазмы
@@ -92,7 +92,7 @@ real[int] MassPlasma(6);
 	
 	//* Графический вывод
 	u2i=u2(3.e-3-x,y); //? Отражение по OY ?
-	// plot(u2i, wait=true,value=true,fill=true);
+	plot(u2i, wait=true,value=true,fill=true);
 	// plot(u2, wait=true,value=true,fill=true);
 	// for (int i=0; i<=30; i++){
 	// //	cout << u2i ( i*(1e-4), 5*L/12) << endl;
@@ -111,8 +111,8 @@ real[int] MassPlasma(6);
 
 	//* Вывод доп. данных
 	//? Часть цикла
-	MassRBC[index] = sumRBC* 2* pi;
-	MassPlasma[index] = sumPlasma* 2* pi;
+	// MassRBC[index] = sumRBC* 2* pi;
+	// MassPlasma[index] = sumPlasma* 2* pi;
 
 
 	cout << "Blood flow rate = " << sumRBC* 2* pi << "     " << sumPlasma* 2* pi << endl;
@@ -122,10 +122,10 @@ real[int] MassPlasma(6);
 
 	// cout <<  sumPlasma* 2* pi << endl;
 	//cout <<  re << endl;
-	cout << "index = " << index << "     " << "kd = " << kd << "     " << "d = " << d << endl;
-	// cout << endl << "kd = " << kd << "\t" << "d = " << d << endl;
+	// cout << "index = " << index << "     " << "kd = " << kd << "     " << "d = " << d << endl;
+	cout << endl << "kd = " << kd << "\t" << "d = " << d << endl;
 //? Часть цикла
-	index ++;
-	}
-	cout << endl << "Density = " << H << endl << MassRBC << endl << MassPlasma << endl << endl;
-}
+// 	index ++;
+// 	}
+// 	cout << endl << "Density = " << H << endl << MassRBC << endl << MassPlasma << endl << endl;
+// }
